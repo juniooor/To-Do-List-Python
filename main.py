@@ -8,10 +8,28 @@ root.resizable(False, False)
 
 task_list = []
 
-def addTask():
-    ...
+def addTask(): # noqa
+    task = task_entry.get()
+    task_entry.delete(0, END)
+    
+    if task:
+        with open("tasklist.txt", 'a') as taskfile:
+            taskfile.write(f"\n{task}")
+        task_list.append(task)
+        listbox.insert(END, task)
+        
+def deleteTask():
+    global task_list
+    task =str(listbox.get(ANCHOR))
+    if task in task_list:
+        task_list.remove(task)
+        with open("tasklist.txt", "w") as taskfile:
+            for task in task_list:
+                taskfile.write(task+"\n")
+                
+        listbox.delete( ANCHOR)      
 
-def OpenTaskFile(): 
+def OpenTaskFile():  # noqa
     
     try:
         global task_list
@@ -23,7 +41,7 @@ def OpenTaskFile():
                 task_list.append(task)
                 listbox.insert(END , task)
     except:
-        file=open('tasklist.txt', 'w')
+        file =open('tasklist.txt', 'w')
         file.close()
 
 Image_icon = PhotoImage(file='imagens/task.png')  # noqa
@@ -70,7 +88,7 @@ scrollbar.config(command=listbox.yview)
 OpenTaskFile()
 
 delete_icon = PhotoImage(file='imagens/delete.png')  # noqa
-Button(root, image=delete_icon, bd=0).pack(side=BOTTOM, pady=13)  # noqa
+Button(root, image=delete_icon, bd=0, command=deleteTask).pack(side=BOTTOM, pady=13)  # noqa
 
 
 root.mainloop()   # noqa
